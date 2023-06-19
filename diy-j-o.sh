@@ -29,8 +29,7 @@ sed -i 's/TVBox/TVBox-J(PY)/g' $CURRENT_DIR/$DIR/app/src/main/res/values/strings
 echo "" >>$CURRENT_DIR/$DIR/app/proguard-rules.pro 
 echo "#新增设定" >>$CURRENT_DIR/$DIR/app/proguard-rules.pro 
 echo "-keep class com.xunlei.downloadlib.** {*;}" >>$CURRENT_DIR/$DIR/app/proguard-rules.pro 
-#背景修改
-mv $CURRENT_DIR/DIY/app_bg.png $CURRENT_DIR/$DIR/app/src/main/res/drawable/app_bg.png
+
 #取消选集全屏
 #sed -i 's/if (showPreview \&\& !fullWindows) toggleFullPreview/\/\/if (showPreview \&\& !fullWindows) toggleFullPreview/g' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/ui/activity/DetailActivity.java
 #缩略图清晰度修改
