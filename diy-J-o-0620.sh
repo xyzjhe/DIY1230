@@ -30,10 +30,10 @@ sed -i 's/download.01.org\/crosswalk\/releases\/crosswalk\/android\/maven2/raw.g
 sed -i 's/TVBox/TVBox-J(PY)/g' $CURRENT_DIR/$DIR/app/src/main/res/values/strings.xml
 
 # 内置接口
-sed -i 's#API_URL, ""#API_URL, "https://agit.ai/laozou/XYQ0612/raw/branch/main/XYQTVBox.json"#g'   $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java
+#sed -i 's#API_URL, ""#API_URL, "https://agit.ai/laozou/XYQ0612/raw/branch/main/XYQTVBox.json"#g'   $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java
 
 #自带源修改
-#sed -i 's/HawkConfig.API_URL, ""/HawkConfig.API_URL, "https:\/\/315600.xyz\/s"/g' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java
+#sed -i 's/HawkConfig.API_URL, ""/HawkConfig.API_URL, "https://agit.ai/laozou/XYQ0612/raw/branch/main/XYQTVBox.json"#/g' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java
 
 #解决模拟器闪退
 echo "" >>$CURRENT_DIR/$DIR/app/proguard-rules.pro 

@@ -28,7 +28,7 @@ sed -i 's/TVBox/TVBox-T(PY)/g' $CURRENT_DIR/$DIR/app/src/main/res/values-zh/stri
 sed -i 's/TVBox/TVBox-T(PY)/g' $CURRENT_DIR/$DIR/app/src/main/res/values/strings.xml
 
 # 内置接口
-#sed -i 's#"app_source"><#"app_source">https://agit.ai/laozou/XYQ0612/raw/branch/main/XYQTVBox.json<#g' $CURRENT_DIR/$DIR/app/src/main/res/values-zh/strings.xml
+sed -i 's#"app_source"><#"app_source">https://agit.ai/laozou/XYQ0612/raw/branch/main/XYQTVBox.json<#g' $CURRENT_DIR/$DIR/app/src/main/res/values-zh/strings.xml
 
 #添加PY支持
 wget --no-check-certificate -qO- "https://raw.githubusercontent.com/UndCover/PyramidStore/main/aar/pyramid-1011.aar" -O $CURRENT_DIR/$DIR/app/libs/pyramid.aar

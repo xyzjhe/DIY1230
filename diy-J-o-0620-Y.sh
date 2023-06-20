@@ -2,12 +2,12 @@
 
 #获取目录
 CURRENT_DIR=$(cd $(dirname $0); pwd)
-num=$(find $CURRENT_DIR -name gradlew  | awk -F"/" '{print NF-1}'| head -1)
-DIR=$(find $CURRENT_DIR -name gradlew  | cut -d \/ -f$num | head -1)
-cd $DIR
+num=$(find $CURRENT_DIR -name gradlew  | awk -F"/" '{print NF-1}')
+DIR=$(find $CURRENT_DIR -name gradlew  | cut -d \/ -f$num)
+cd $CURRENT_DIR/$DIR
 
 #共存
-sed -i 's/com.github.tvbox.osc/com.xp.yyyBox/g' $CURRENT_DIR/$DIR/app/build.gradle
+sed -i 's/com.github.tvbox.osc/com.xp.xxxBox/g' $CURRENT_DIR/$DIR/app/build.gradle
 
 #签名
 signingConfigs='ICAgIHNpZ25pbmdDb25maWdzIHtcCiAgICAgICAgaWYgKHByb2plY3QuaGFzUHJvcGVydHkoIlJFTEVBU0VfU1RPUkVfRklMRSIpKSB7XAogICAgICAgICAgICBteUNvbmZpZyB7XAogICAgICAgICAgICAgICAgc3RvcmVGaWxlIGZpbGUoUkVMRUFTRV9TVE9SRV9GSUxFKVwKICAgICAgICAgICAgICAgIHN0b3JlUGFzc3dvcmQgUkVMRUFTRV9TVE9SRV9QQVNTV09SRFwKICAgICAgICAgICAgICAgIGtleUFsaWFzIFJFTEVBU0VfS0VZX0FMSUFTXAogICAgICAgICAgICAgICAga2V5UGFzc3dvcmQgUkVMRUFTRV9LRVlfUEFTU1dPUkRcCiAgICAgICAgICAgICAgICB2MVNpZ25pbmdFbmFibGVkIHRydWVcCiAgICAgICAgICAgICAgICB2MlNpZ25pbmdFbmFibGVkIHRydWVcCiAgICAgICAgICAgICAgICBlbmFibGVWM1NpZ25pbmcgPSB0cnVlXAogICAgICAgICAgICAgICAgZW5hYmxlVjRTaWduaW5nID0gdHJ1ZVwKICAgICAgICAgICAgfVwKICAgICAgICB9XAogICAgfVwKXA=='
@@ -23,12 +23,30 @@ echo "RELEASE_KEY_ALIAS=TVBoxOSC" >>$CURRENT_DIR/$DIR/gradle.properties
 echo "RELEASE_STORE_PASSWORD=TVBoxOSC" >>$CURRENT_DIR/$DIR/gradle.properties
 echo "RELEASE_KEY_PASSWORD=TVBoxOSC" >>$CURRENT_DIR/$DIR/gradle.properties
 
+#xwalk修复
+sed -i 's/download.01.org\/crosswalk\/releases\/crosswalk\/android\/maven2/raw.githubusercontent.com\/lm317379829\/TVBoxDIY\/main/g' $CURRENT_DIR/$DIR/build.gradle
+
 #名称修改
-sed -i 's/TVBox/TVBox-T(PY)/g' $CURRENT_DIR/$DIR/app/src/main/res/values-zh/strings.xml
-sed -i 's/TVBox/TVBox-T(PY)/g' $CURRENT_DIR/$DIR/app/src/main/res/values/strings.xml
+sed -i 's/TVBox/TVBox-J(PY)/g' $CURRENT_DIR/$DIR/app/src/main/res/values/strings.xml
 
 # 内置接口
-#sed -i 's#"app_source"><#"app_source">https://agit.ai/laozou/XYQ0612/raw/branch/main/XYQTVBox.json<#g' $CURRENT_DIR/$DIR/app/src/main/res/values-zh/strings.xml
+sed -i 's#API_URL, ""#API_URL, "https://agit.ai/laozou/XYQ0612/raw/branch/main/XYQTVBox.json"#g'   $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java
+
+#自带源修改
+#sed -i 's/HawkConfig.API_URL, ""/HawkConfig.API_URL, "https:\/\/315600.xyz\/s"/g' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java
+
+#解决模拟器闪退
+echo "" >>$CURRENT_DIR/$DIR/app/proguard-rules.pro 
+echo "#新增设定" >>$CURRENT_DIR/$DIR/app/proguard-rules.pro 
+echo "-keep class com.xunlei.downloadlib.** {*;}" >>$CURRENT_DIR/$DIR/app/proguard-rules.pro 
+
+#缩略图清晰度修改
+sed -i 's/mContext, 400/mContext, 500/g' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/ui/activity/DetailActivity.java
+sed -i 's/mContext, 300/mContext, 400/g' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/ui/activity/DetailActivity.java
+sed -i 's/mContext, 400/mContext, 500/g' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/ui/adapter/GridAdapter.java
+sed -i 's/mContext, 300/mContext, 400/g' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/ui/adapter/GridAdapter.java
+sed -i 's/mContext, 400/mContext, 500/g' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/ui/adapter/HistoryAdapter.java
+sed -i 's/mContext, 300/mContext, 400/g' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/ui/adapter/HistoryAdapter.java
 
 #添加PY支持
 wget --no-check-certificate -qO- "https://raw.githubusercontent.com/UndCover/PyramidStore/main/aar/pyramid-1011.aar" -O $CURRENT_DIR/$DIR/app/libs/pyramid.aar
