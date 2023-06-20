@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Clone Project
-        run: git clone -b main --depth=1 https://github.com/takagen99/Box.git
+        run: git clone -b main --depth=1 https://github.com/xyzjhe/tvbox-taka.git
       - name: DIY
         run: |
           chmod +x diy-T-o-0620.sh
