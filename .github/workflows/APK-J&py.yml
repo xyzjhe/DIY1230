@@ -1,25 +1,70 @@
 name: APK-J&py  Build
 
 on:
+  schedule:
+    - cron: 10,40 0-15,23 * * *
 #  push:
 #    branches:
 #      - main
-#  pull_request:
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - userName: q215613905
+            repoUrl: https://github.com/q215613905/TVBoxOS
+            branchName: main
+          - userName: takagen99
+            repoUrl: https://github.com/takagen99/Box
+            branchName: main
+    env:
+      local_xwalk: ${{ secrets.LOCAL_XWALK }}
+      # 登录蓝奏云后在控制台运行document.cookie
+      ylogin: ${{ secrets.YLOGIN }}
+      phpdisk_info: ${{ secrets.PHPDISK_INFO }}
+      # 蓝奏云里的文件夹ID（TVBoxOS:5848262）
+      lanzou_folder_id: 5889934
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Clone Project
-        run: git clone -b main --depth=1 https://github.com/q215613905/TVBoxOS.git
+          path: actions
+
+      - name: Get The Last Commit
+        working-directory: actions
+        run: |
+          commit=$(curl -sL ${{ matrix.repoUrl }}/commits/${{ matrix.branchName }} |grep -o '/commit/[a-z0-9]\+' |head -1 | cut -d\/ -f3)
+          # if ! git log --oneline |grep -q "$commit"; then
+          if ! grep -q "$commit" ./log/${{ matrix.userName }}.txt; then
+            echo "commit=$commit" >> $GITHUB_ENV
+            echo "commit_id=${commit:0:7}" >> $GITHUB_ENV
+          fi
+
+      - name: Clone Source Code
+        if: ${{ env.commit }}
+        run: |
+          git clone -b ${{ matrix.branchName }} ${{ matrix.repoUrl }} TVBoxOSC
+          # git checkout ${{ env.commit }}
+
+      - name: Compress Source Code
+        if: ${{ env.commit }}
+        working-directory: TVBoxOSC
+        run: |
+          echo "tag=$(git log --date=format:'%Y%m%d-%H%M' --pretty=format:%cd ${{ env.commit_id }} -1)" >> $GITHUB_ENV
+          echo "update_time=$(git log --date=format:'%Y/%m/%d %H:%M' --pretty=format:%cd ${{ env.commit_id }} -1)" >> $GITHUB_ENV
+          zip -q -x ".git/*" -r ${{ env.commit_id }}-source.zip .
+      
       - name: DIY
         run: |
           chmod +x diy-J-o-0620.sh
           bash ${{ github.workspace }}/diy-J-o-0620.sh
+      
       - name: Build With Gradle
         run: |
           num=$(find ${{ github.workspace }} -name gradlew  | awk -F"/" '{print NF-1}')
@@ -27,12 +72,14 @@ jobs:
           cd $DIR
           chmod +x gradlew
           ./gradlew assemblerelease --build-cache --parallel --daemon --warning-mode all
+      
       - name: Prepare App
         run: |
           mkdir -p ${{ github.workspace }}/apk/
           for file in `find ~ -name "*.apk" -print`; do
             mv "$file" ${{ github.workspace }}/apk/
           done
+      
       - name: Upload App To Artifact
         uses: actions/upload-artifact@v3
         with:
