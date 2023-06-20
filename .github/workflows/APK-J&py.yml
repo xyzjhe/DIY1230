@@ -30,11 +30,11 @@ jobs:
       lanzou_folder_id: 5889934
 
     steps:
-    #      - name: IP
+#      - name: IP
 #        run: |
 #          ip=`curl -sL http://ip.42.pl/raw`
 #          echo "server ip: $ip"
-    
+
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -64,8 +64,8 @@ jobs:
           echo "tag=$(git log --date=format:'%Y%m%d-%H%M' --pretty=format:%cd ${{ env.commit_id }} -1)" >> $GITHUB_ENV
           echo "update_time=$(git log --date=format:'%Y/%m/%d %H:%M' --pretty=format:%cd ${{ env.commit_id }} -1)" >> $GITHUB_ENV
           zip -q -x ".git/*" -r ${{ env.commit_id }}-source.zip .
-          
-       - name: Add Sign Info
+
+      - name: Add Sign Info
         if: ${{ env.commit }}
         working-directory: TVBoxOSC
         run: |
@@ -85,28 +85,6 @@ jobs:
           sed -i "/versionName/c\\versionName '${{ env.tag }}'" ./app/build.gradle
           sed -i "/applicationId/c\\applicationId '${{ matrix.userName }}.tvbox.osc'" ./app/build.gradle
           sed -i "/android:text=/c\\        android:text=\"v${{ env.tag }}\\\\n本软件只提供聚合展示功能，所有资源来自网上, 软件不参与任何制作, 上传, 储存, 下载等内容。 软件仅供学习参考, 请于安装后24小时内删除。\\\\n\\\\n打包分发请保留出处\\\\n${{ matrix.repoUrl }}\"" ./app/src/main/res/layout/dialog_about.xml
-          
-          #添加PY支持
-wget --no-check-certificate -qO- "https://raw.githubusercontent.com/UndCover/PyramidStore/main/aar/pyramid-1011.aar" -O $CURRENT_DIR/$DIR/app/libs/pyramid.aar
-sed -i "/thunder.jar/a\    implementation files('libs@pyramid.aar')" $CURRENT_DIR/$DIR/app/build.gradle
-sed -i 's#@#\\#g' $CURRENT_DIR/$DIR/app/build.gradle
-sed -i 's#pyramid#\\pyramid#g' $CURRENT_DIR/$DIR/app/build.gradle
-echo "" >>$CURRENT_DIR/$DIR/app/proguard-rules.pro
-echo "" >>$CURRENT_DIR/$DIR/app/proguard-rules.pro
-echo "#添加PY支持" >>$CURRENT_DIR/$DIR/app/proguard-rules.pro
-echo "-keep public class com.undcover.freedom.pyramid.** { *; }" >>$CURRENT_DIR/$DIR/app/proguard-rules.pro
-echo "-dontwarn com.undcover.freedom.pyramid.**" >>$CURRENT_DIR/$DIR/app/proguard-rules.pro
-echo "-keep public class com.chaquo.python.** { *; }" >>$CURRENT_DIR/$DIR/app/proguard-rules.pro
-echo "-dontwarn com.chaquo.python.**" >>$CURRENT_DIR/$DIR/app/proguard-rules.pro
-sed -i '/import com.orhanobut.hawk.Hawk;/a\import com.undcover.freedom.pyramid.PythonLoader;' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/base/App.java
-sed -i '/import com.orhanobut.hawk.Hawk;/a\import com.github.catvod.crawler.SpiderNull;' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/base/App.java
-sed -i '/PlayerHelper.init/a\        PythonLoader.getInstance().setApplication(this);' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/base/App.java
-sed -i '/import android.util.Base64;/a\import com.github.catvod.crawler.SpiderNull;' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java
-sed -i '/import android.util.Base64;/a\import com.undcover.freedom.pyramid.PythonLoader;' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java
-sed -i '/private void parseJson(String apiUrl, String jsonStr)/a\        PythonLoader.getInstance().setConfig(jsonStr);' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java
-sed -i '/public Spider getCSP(SourceBean sourceBean)/a\        if (sourceBean.getApi().startsWith(\"py_\")) {\n        try {\n            return PythonLoader.getInstance().getSpider(sourceBean.getKey(), sourceBean.getExt());\n        } catch (Exception e) {\n            e.printStackTrace();\n            return new SpiderNull();\n        }\n    }' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java
-sed -i '/public Object\[\] proxyLoca/a\    try {\n        if(param.containsKey(\"api\")){\n            String doStr = param.get(\"do\").toString();\n            if(doStr.equals(\"ck\"))\n                return PythonLoader.getInstance().proxyLocal(\"\",\"\",param);\n            SourceBean sourceBean = ApiConfig.get().getSource(doStr);\n            return PythonLoader.getInstance().proxyLocal(sourceBean.getKey(),sourceBean.getExt(),param);\n        }else{\n            String doStr = param.get(\"do\").toString();\n            if(doStr.equals(\"live\")) return PythonLoader.getInstance().proxyLocal(\"\",\"\",param);\n        }\n    } catch (Exception e) {\n        e.printStackTrace();\n    }\n' $CURRENT_DIR/$DIR/app/src/main/java/com/github/tvbox/osc/api/ApiConfig.java
-
 
       - name: Env Cache
         uses: actions/cache@v3
@@ -205,5 +183,3 @@ sed -i '/public Object\[\] proxyLoca/a\    try {\n        if(param.containsKey(\
           python3 ${{ github.workspace }}/actions/.github/scripts/lzy_web.py \
           "${{ github.workspace }}/TVBoxOSC/apk/TVBox_${{ matrix.userName }}_${{ env.tag }}.apk" "$lanzou_folder_id"
           echo "share address: https://wws.lanzouv.com/b03pbjwof password:TVBox
-      
-      -
