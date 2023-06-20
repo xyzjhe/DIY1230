@@ -30,6 +30,11 @@ jobs:
       lanzou_folder_id: 5889934
 
     steps:
+    #      - name: IP
+#        run: |
+#          ip=`curl -sL http://ip.42.pl/raw`
+#          echo "server ip: $ip"
+    
       - name: Checkout
         uses: actions/checkout@v3
         with:
