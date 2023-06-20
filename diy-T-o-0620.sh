@@ -27,6 +27,7 @@ echo "RELEASE_KEY_PASSWORD=TVBoxOSC" >>$CURRENT_DIR/$DIR/gradle.properties
 sed -i 's/TVBox/TVBox-T(PY)/g' $CURRENT_DIR/$DIR/app/src/main/res/values-zh/strings.xml
 sed -i 's/TVBox/TVBox-T(PY)/g' $CURRENT_DIR/$DIR/app/src/main/res/values/strings.xml
 
+# 内置接口
 sed -i 's#"app_source"><#"app_source">https://gitee.com/zhoujck/tv/raw/master/box<#g' $CURRENT_DIR/$DIR/app/src/main/res/values-zh/strings.xml
 
 #添加PY支持
