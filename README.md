@@ -1,6 +1,8 @@
 # 说明
 
-不要FORK;不要FORK;不要FORK...
+不不要FORK;不要FORK;不要FORK...
+
+不要git;不要git;不要git...
 
 重要的事情说三遍
 
