@@ -1,4 +1,9 @@
 #!/bin/bash
+
+#获取目录
+CURRENT_DIR=$(cd $(dirname $0); pwd)
+num=$(find $CURRENT_DIR -name gradlew  | awk -F"/" '{print NF-1}'| head -1)
+DIR=$(find $CURRENT_DIR -name gradlew  | cut -d \/ -f$num | head -1)
 #添加PY支持
 wget --no-check-certificate -qO- "https://raw.githubusercontent.com/UndCover/PyramidStore/main/aar/pyramid-1011.aar" -O $CURRENT_DIR/$DIR/app/libs/pyramid.aar
 sed -i "/thunder.jar/a\    implementation files('libs@pyramid.aar')" $CURRENT_DIR/$DIR/app/build.gradle
