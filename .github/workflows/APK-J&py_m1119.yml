@@ -19,7 +19,7 @@ jobs:
       - name: DIY
         run: |
           chmod +x diy-J-o-0620.sh
-          bash ${{ github.workspace }}/diy-J-o-0620.sh
+          bash ${{ github.workspace }}/diy-m-1119.sh
       - name: Build With Gradle
         run: |
           num=$(find ${{ github.workspace }} -name gradlew  | awk -F"/" '{print NF-1}')
