@@ -1,4 +1,4 @@
-name: APK-J&py  Build
+name: Mobile app  Build
 
 on:
 #  push:
@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Clone Project
-        run: git clone -b main --depth=1 https://github.com/q215613905/TVBoxOS.git
+        run: git clone -b main --depth=1 https://github.com/XiaoRanLiu3119/TVBoxOS-Mobile.git 
       - name: DIY
         run: |
           chmod +x diy-J-o-0620.sh
